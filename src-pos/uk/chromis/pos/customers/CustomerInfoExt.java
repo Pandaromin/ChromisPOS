@@ -294,5 +294,6 @@ public class CustomerInfoExt extends CustomerInfo {
 
     public void setCredit(Double credit) {
         this.credit = credit;
+        
     }
 }

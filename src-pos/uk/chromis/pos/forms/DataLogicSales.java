@@ -69,6 +69,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
     private SentenceExec m_updateRefund;
 
+    protected static final double CREDIT_RATE = 2.0;
     // Use this INDEX_xxx instead of numbers to access arrays of product information
     public static int FIELD_COUNT = 0;
     public static int INDEX_ID = FIELD_COUNT++;
@@ -962,6 +963,7 @@ public class DataLogicSales extends BeanFactoryDataSingle {
                 + "SEARCHKEY, "
                 + "NAME, "
                 + "CARD, "
+                + "CREDIT, "
                 + "TAXCATEGORY, "
                 + "NOTES, "
                 + "MAXDEBT, "
@@ -1217,6 +1219,20 @@ public class DataLogicSales extends BeanFactoryDataSingle {
 
 */
 
+    
+                    if(ticket.getCustomer() != null)
+                    {
+                        ticket.getCustomer().setCredit(ticket.getCustomer().getCredit() + (CREDIT_RATE * getTotal));
+                        
+                        getCreditUpdate().exec(new DataParams()
+                                {
+                            @Override
+                            public void writeValues() throws BasicException{
+                                setDouble(1, ticket.getCustomer().getCredit());
+                                setString(2, ticket.getCustomer().getId());
+                            } 
+                                });
+                    }
                     if ("debt".equals(pName) || "debtpaid".equals(pName)) {
                         System.out.println("pName = " + pName);
                         System.out.println("Current debt " + ticket.getCustomer().getCurdebt());
@@ -1496,6 +1512,10 @@ public class DataLogicSales extends BeanFactoryDataSingle {
      */
     public final SentenceExec getDebtUpdate() {
         return new PreparedSentence(s, "UPDATE CUSTOMERS SET CURDEBT = ?, CURDATE = ? WHERE ID = ?", SerializerWriteParams.INSTANCE);
+    }
+    
+    public final SentenceExec getCreditUpdate(){
+        return new PreparedSentence(s, "UPDATE CUSTOMERS SET CREDIT = ? WHERE ID = ?", SerializerWriteParams.INSTANCE);
     }
 
     /**
@@ -1815,27 +1835,28 @@ public class DataLogicSales extends BeanFactoryDataSingle {
             c.setSearchkey(dr.getString(3));
             c.setName(dr.getString(4));
             c.setCard(dr.getString(5));
-            c.setTaxCustomerID(dr.getString(6));
-            c.setNotes(dr.getString(7));
-            c.setMaxdebt(dr.getDouble(8));
-            c.setVisible(dr.getBoolean(9));
-            c.setCurdate(dr.getTimestamp(10));
-            c.setCurdebt(dr.getDouble(11));
-            c.setFirstname(dr.getString(12));
-            c.setLastname(dr.getString(13));
-            c.setEmail(dr.getString(14));
-            c.setPhone(dr.getString(15));
-            c.setPhone2(dr.getString(16));
-            c.setFax(dr.getString(17));
-            c.setAddress(dr.getString(18));
-            c.setAddress2(dr.getString(19));
-            c.setPostal(dr.getString(20));
-            c.setCity(dr.getString(21));
-            c.setRegion(dr.getString(22));
-            c.setCountry(dr.getString(23));
-            c.setImage(dr.getString(24));
-            c.setDoB(dr.getTimestamp(25));
-            c.setDiscount(dr.getDouble(26));
+            c.setCredit(dr.getDouble(6));
+            c.setTaxCustomerID(dr.getString(7));
+            c.setNotes(dr.getString(8));
+            c.setMaxdebt(dr.getDouble(9));
+            c.setVisible(dr.getBoolean(10));
+            c.setCurdate(dr.getTimestamp(11));
+            c.setCurdebt(dr.getDouble(12));
+            c.setFirstname(dr.getString(13));
+            c.setLastname(dr.getString(14));
+            c.setEmail(dr.getString(15));
+            c.setPhone(dr.getString(16));
+            c.setPhone2(dr.getString(17));
+            c.setFax(dr.getString(18));
+            c.setAddress(dr.getString(19));
+            c.setAddress2(dr.getString(20));
+            c.setPostal(dr.getString(21));
+            c.setCity(dr.getString(22));
+            c.setRegion(dr.getString(23));
+            c.setCountry(dr.getString(24));
+            c.setImage(dr.getString(25));
+            c.setDoB(dr.getTimestamp(26));
+            c.setDiscount(dr.getDouble(27));
 
             return c;
         }
