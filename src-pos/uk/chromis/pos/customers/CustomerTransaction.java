@@ -209,6 +209,8 @@ public class CustomerTransaction {
                 } catch (ParseException ex) {
                     Logger.getLogger(DataLogicSales.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+
                 return new CustomerTransaction(ticketId, productName, unit, amount, total, date, customerName);
             }
         };

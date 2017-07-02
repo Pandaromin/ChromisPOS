@@ -477,6 +477,8 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         m_jButtonRemove.setEnabled(!m_aPaymentInfo.isEmpty());
         m_jTabPayment.setSelectedIndex(0); // selecciono el primero
         ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext, m_dTotal - m_aPaymentInfo.getTotal(), m_sTransactionID);
+   
+
     }
 
     protected static Window getWindow(Component parent) {
@@ -662,6 +664,7 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
             ((JPaymentInterface) m_jTabPayment.getSelectedComponent()).activate(customerext,
                     m_dTotal - m_aPaymentInfo.getTotal(),
                     m_sTransactionID);
+
         }
 
     }//GEN-LAST:event_m_jTabPaymentStateChanged

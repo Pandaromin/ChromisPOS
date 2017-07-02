@@ -28,6 +28,7 @@ public class CustomerInfoExt extends CustomerInfo {
     protected String notes;
     protected boolean visible;
     protected String card;
+    protected Double credit;
     protected Double maxdebt;
     protected Date curdate;
     protected Double curdebt;
@@ -286,4 +287,13 @@ public class CustomerInfoExt extends CustomerInfo {
         this.image = image;
     }
 
+    
+    public Double getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Double credit) {
+        this.credit = credit;
+        
+    }
 }

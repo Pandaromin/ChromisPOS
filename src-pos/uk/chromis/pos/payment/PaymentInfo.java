@@ -82,4 +82,6 @@ public abstract class PaymentInfo {
     public String printTotal() {
         return Formats.CURRENCY.formatValue(getTotal());
     }
+    
+  
 }
