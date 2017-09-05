@@ -306,6 +306,30 @@ public abstract class JPaymentSelect extends javax.swing.JDialog
         }
     }
 
+    public class JPaymentCreditCreator implements JPaymentCreator {
+
+        @Override
+        public JPaymentInterface createJPayment() {
+            return new JPaymentCredit(JPaymentSelect.this);
+        }
+
+        @Override
+        public String getKey() {
+            return "payment.credit";
+        }
+
+        @Override
+        public String getLabelKey() {
+            return "tab.credit";
+        }
+
+        @Override
+        public String getIconKey() {
+            return "/uk/chromis/images/customer.png";
+        }
+    }
+
+    
     public class JPaymentDebtCreator implements JPaymentCreator {
 
         @Override

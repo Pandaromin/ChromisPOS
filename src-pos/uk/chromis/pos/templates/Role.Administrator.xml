@@ -55,6 +55,8 @@
 	<class name="/uk/chromis/reports/usersales.bs"/>
 	<class name="/uk/chromis/reports/stockchanges.bs"/>
 	<class name="button.linediscount"/>
+        <class name="payment.credit"/>
+
 	<class name="payment.custom"/>
 	<class name="button.refundeditsale"/>
 	<class name="uk.chromis.pos.admin.PeoplePanel"/>

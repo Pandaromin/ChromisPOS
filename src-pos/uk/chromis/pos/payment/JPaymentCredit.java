@@ -21,22 +21,84 @@ import uk.chromis.pos.util.RoundUtils;
 public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterface {
     
   
+    private final JPaymentNotifier notifier;
+    private CustomerInfoExt customerext;
+    private double m_dPaid;
+    private double m_dTotal;
+    
+    /** Creates new form JPaymentDebt
+     * @param notifier */
+    public JPaymentCredit(JPaymentNotifier notifier) {
 
+        this.notifier = notifier;
+
+        initComponents();
+
+        m_jTendered.addPropertyChangeListener("Edition", new RecalculateState());
+        m_jTendered.addEditorKeys(m_jKeys);
+        
+    }
+
+    private void printState()
+    {
+        
+    }
     @Override
     public void activate(CustomerInfoExt customerext, double dTotal, String transactionID) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.customerext = customerext;
+        m_dTotal = dTotal;
+        m_jTendered.reset();
+        
+        if (customerext == null) {
+            m_jName.setText(null);
+            m_jNotes.setText(null);
+            txtCost.setText(null);
+            txtFincred.setText(null);
+            txtCurcred.setText(null);
+
+            m_jKeys.setEnabled(false);
+            m_jTendered.setEnabled(false);
+
+        }else {
+            m_jName.setText(customerext.getName());
+            m_jNotes.setText(customerext.getNotes());
+            txtCost.setText(Formats.CURRENCY.formatValue(RoundUtils.getValue(m_dPaid)));
+            m_jCredit_Purchase.setText(Formats.CURRENCY.formatValue(new Double(m_dPaid)));
+       //     System.out.println(customerext.getCurdebt();
+            txtCurcred.setText(Formats.CURRENCY.formatValue(RoundUtils.getValue(customerext.getCredit())));
+
+            if (RoundUtils.compare(RoundUtils.getValue(customerext.getCurdebt()), RoundUtils.getValue(customerext.getMaxdebt())) >= 0) {
+                m_jKeys.setEnabled(false);
+                m_jTendered.setEnabled(false);
+            } else {
+                m_jKeys.setEnabled(true);
+                m_jTendered.setEnabled(true);
+                m_jTendered.activate();
+            }
+        }
+
+        printState();
     }
 
     @Override
     public PaymentInfo executePayment() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new PaymentInfoTicket(m_dPaid, "credit");
     }
 
     @Override
     public Component getComponent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return this;
+    }
+    
+    private class RecalculateState implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            printState();
+        }
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,12 +113,10 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
         jLabel3 = new javax.swing.JLabel();
         m_jName = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel220 = new javax.swing.JLabel();
         txtCurcred = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        jLabel420 = new javax.swing.JLabel();
         txtFincred = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        txtCurdate = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         m_jNotes = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
@@ -73,7 +133,7 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
         jPanel4.setLayout(null);
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel8.setText(AppLocal.getIntString("label.debt")); // NOI18N
+        jLabel8.setText(AppLocal.getIntString("label.cred")); // NOI18N
         jPanel4.add(jLabel8);
         jLabel8.setBounds(20, 20, 100, 25);
 
@@ -101,10 +161,10 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
         jPanel4.add(jLabel12);
         jLabel12.setBounds(20, 90, 100, 25);
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel2.setText(AppLocal.getIntString("label.maxdebt")); // NOI18N
-        jPanel4.add(jLabel2);
-        jLabel2.setBounds(20, 140, 100, 25);
+        jLabel220.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel220.setText(AppLocal.getIntString("label.curcred")); // NOI18N
+        jPanel4.add(jLabel220);
+        jLabel220.setBounds(20, 140, 100, 25);
 
         txtCurcred.setEditable(false);
         txtCurcred.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -112,27 +172,16 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
         jPanel4.add(txtCurcred);
         txtCurcred.setBounds(120, 140, 130, 25);
 
-        jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel4.setText(AppLocal.getIntString("label.curdebt")); // NOI18N
-        jPanel4.add(jLabel4);
-        jLabel4.setBounds(20, 200, 100, 25);
+        jLabel420.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel420.setText(AppLocal.getIntString("label.fincred")); // NOI18N
+        jPanel4.add(jLabel420);
+        jLabel420.setBounds(20, 200, 100, 25);
 
         txtFincred.setEditable(false);
         txtFincred.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtFincred.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jPanel4.add(txtFincred);
         txtFincred.setBounds(120, 200, 130, 25);
-
-        jLabel6.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel6.setText(AppLocal.getIntString("label.curdate")); // NOI18N
-        jPanel4.add(jLabel6);
-        jLabel6.setBounds(20, 230, 100, 25);
-
-        txtCurdate.setEditable(false);
-        txtCurdate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtCurdate.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPanel4.add(txtCurdate);
-        txtCurdate.setBounds(120, 230, 130, 25);
 
         m_jNotes.setEditable(false);
         m_jNotes.setBackground(new java.awt.Color(240, 240, 240));
@@ -191,11 +240,10 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel220;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel420;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
@@ -208,7 +256,6 @@ public class JPaymentCredit extends javax.swing.JPanel implements JPaymentInterf
     private uk.chromis.editor.JEditorCurrencyPositive m_jTendered;
     private javax.swing.JTextField txtCost;
     private javax.swing.JTextField txtCurcred;
-    private javax.swing.JTextField txtCurdate;
     private javax.swing.JTextField txtFincred;
     // End of variables declaration//GEN-END:variables
 }
